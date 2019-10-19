@@ -1,0 +1,43 @@
+body {
+    background-image: url("/assets/images/background.jpg");
+    padding-top: 70px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
+
+}
+
+.deleteNote {
+	display: inline-block;
+}
+
+.previousNotes {
+    display: inline-block;
+    width: 90%
+}
+
+#scrape {
+    margin: 8px 0px;
+}
+
+#ftm1 {
+
+    opacity: .80;
+  color: black;  
+}
+
+#ftm {
+
+    opacity: .65;
+    
+}
+#bgc {
+
+    background: cornsilk;
+}
+
+#bgSA {
+
+    background: #d8b9a1;
+}
