@@ -6,7 +6,7 @@ $("#scrape").on("click", function() {
     }).done(function(data) {
         console.log(data)
         window.location = "/"
-    })
+     })
 });
 
 //Set clicked nav option to active

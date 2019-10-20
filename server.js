@@ -1,23 +1,25 @@
-// Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var path = require("path");
 
+
+// Scraping tools
+// var request = require("request"); //remove this  
+var axios = require("axios");
+var cheerio = require("cheerio");
+
 // Requiring Note and Article models
 var Note = require("./models/Note.js");
 var Article = require("./models/Article.js");
 
-// Scraping tools
-var request = require("request");
-var cheerio = require("cheerio");
+// added index.js then code below
+// var db = require("./models")
 
-// Set mongoose to leverage built in JavaScript ES6 Promises
-mongoose.Promise = Promise;
 
-//Define port
-var port = process.env.PORT || 3000
+//Define PORT
+var PORT = process.env.PORT || 4000
 
 // Initialize Express
 var app = express();
@@ -27,6 +29,8 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+
+app.use(express.json());
 
 // Make public a static dir
 app.use(express.static("public"));
@@ -40,12 +44,17 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
+
 // Database configuration with mongoose
-// mongoose.connect("mongodb://heroku_jmv816f9:5j1nd4taq42hi29bfm5hobeujd@ds133192.mlab.com:33192/heroku_jmv816f9");
-mongoose.connect("mongodb://localhost/mongoscraper");
+// mongoose.connect("mongodb://localhost/mongoscraper");
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoscraper";
+
+mongoose.connect(MONGODB_URI);
+
 var db = mongoose.connection;
 
-// Show any mongoose errors
+//Show any mongoose errors
 db.on("error", function(error) {
   console.log("Mongoose Error: ", error);
 });
@@ -55,19 +64,32 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
+// Main route (simple Hello World Message)
+// app.get("/", function(req, res) {
+//   res.send("Hello world");
+// });
+
+// app.get("/", function(req, res) {
+//   res.send("home");
+// });
+
 // Routes
 // ======
 
+
+
 //GET requests to render Handlebars pages
 app.get("/", function(req, res) {
-  Article.find({"saved": false}, function(error, data) {
+ Article.find({"saved": false}, function(error, data) {
     var hbsObject = {
       article: data
     };
-    console.log(hbsObject);
+    // console.log(hbsObject);
     res.render("home", hbsObject);
   });
 });
+
+
 
 app.get("/saved", function(req, res) {
   Article.find({"saved": true}).populate("notes").exec(function(error, articles) {
@@ -78,13 +100,15 @@ app.get("/saved", function(req, res) {
   });
 });
 
-// A GET request to scrape the nytimes website
+
+
+// A GET request to scrape the echojs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
-  request("https://www.nytimes.com/", function(error, response, html) {
+  axios.get("https://www.nytimes.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
-    var $ = cheerio.load(html);
-    // Now, we grab every article tag, and do the following:
+    var $ = cheerio.load(response.data);
+    // Now, we grab every h2 within an article tag, and do the following:
     $("article").each(function(i, element) {
 
       // Save an empty result object
@@ -99,15 +123,24 @@ app.get("/scrape", function(req, res) {
         summary = $(this).find("p").text();
       };
 
+      
+
       result.title = $(this).find("h2").text();
       result.summary = summary;
       result.link = "https://www.nytimes.com" + $(this).find("a").attr("href");
 
-      // Using our Article model, create a new entry
+              // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
 
-      // Now, save that entry to the db
+      var query = result.title;
+      Article.findOne({title:query}, function(err, Article){
+        if(err) console.log(err);
+        if ( Article){
+            console.log("This has already been saved");
+        } else {
+ 
+// Now, save that entry to the db
       entry.save(function(err, doc) {
         // Log any errors
         if (err) {
@@ -116,15 +149,41 @@ app.get("/scrape", function(req, res) {
         // Or log the doc
         else {
           console.log(doc);
-        }
+          
+         
+            }
       });
+
+        }
+    });
+     
+      
+      // // Using our Article model, create a new entry
+      // // This effectively passes the result object to the entry (and the title and link)
+      // var entry = new Article(result);
+
+      // // Now, save that entry to the db
+      // entry.save(function(err, doc) {
+      //   // Log any errors
+      //   if (err) {
+      //     console.log(err);
+      //   }
+      //   // Or log the doc
+      //   else {
+      //     console.log(doc);
+         
+      //            }
+      // });
 
     });
       // Tell the browser that we finished scraping the text
        res.send("Scrape Complete");
+       alert("Completed Scrape");
 
   });
 });
+
+
 
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
@@ -257,8 +316,12 @@ app.delete("/notes/delete/:note_id/:article_id", function(req, res) {
   });
 });
 
-// Listen on port
-app.listen(port, function() {
-  console.log("App running on port " + port);
+
+
+// Listen on PORT
+app.listen(PORT, function() {
+  console.log("App running on PORT localhost:" + PORT);
 });
+
+
 
