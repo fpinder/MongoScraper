@@ -94,6 +94,7 @@ app.get("/", function (req, res) {
 
 
 
+
 app.get("/saved", function (req, res) {
   Article.find({
     "saved": true
@@ -348,3 +349,4 @@ app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
 app.listen(PORT, function () {
   console.log("App running on PORT localhost:" + PORT);
 });
+
