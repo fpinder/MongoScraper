@@ -130,6 +130,7 @@ app.get("/scrape", function (req, res) {
       // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
 
+      //Use for checking duplicate articles
       var query = result.title;
 
       Article.findOne({
