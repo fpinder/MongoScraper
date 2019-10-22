@@ -131,7 +131,7 @@ app.get("/scrape", function (req, res) {
       var entry = new Article(result);
 
       var query = result.title;
-   
+
       Article.findOne({
         title: query
       }, function (err, Article) {
@@ -149,31 +149,10 @@ app.get("/scrape", function (req, res) {
             // Or log the doc
             else {
               console.log(doc);
-
-
             }
           });
         }
       });
-
-
-      // // Using our Article model, create a new entry
-      // // This effectively passes the result object to the entry (and the title and link)
-      // var entry = new Article(result);
-
-      // // Now, save that entry to the db
-      // entry.save(function(err, doc) {
-      //   // Log any errors
-      //   if (err) {
-      //     console.log(err);
-      //   }
-      //   // Or log the doc
-      //   else {
-      //     console.log(doc);
-
-      //            }
-      // });
-
     });
     // Tell the browser that we finished scraping the text
     res.send("Scrape Complete");
@@ -335,12 +314,14 @@ app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
 });
 
 //clear Article
-app.get("/clear", function(res, req) {
-  Article.deleteMany({ saved: false }).then(function(err) {
+app.get("/clear", function (res, req) {
+  Article.deleteMany({
+    saved: false
+  }).then(function (err) {
     if (err) {
       console.log(err);
-     }else{
-res.send("All Cleared")
+    } else {
+      res.send("All Cleared")
 
     }
   });
