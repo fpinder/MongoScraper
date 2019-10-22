@@ -8,7 +8,7 @@ _The Application [Mongo Scraper!](https://evening-savannah-93916.herokuapp.com) 
 
 `home handlebars Page`
 
-<a href="#"><img src="https://github.com/fpinder/MongoScraper/blob/master/public/assets/images/background.jpg" alt="Home Page"></a>
+<a href="#"><img src="https://github.com/fpinder/MongoScraper/blob/master/public/assets/images/backgroundRead.jpg" alt="Home Page"></a>
 
 `Articles Scraped`
 
