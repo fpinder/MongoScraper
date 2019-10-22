@@ -73,3 +73,16 @@ $(".deleteNote").on("click", function() {
         window.location = "/saved"
     })
 });
+
+// Handle clear all Article that are not saved
+$(document).on("click", "#clear", function(err, res) {
+    $("#articles").empty();
+    $.ajax({
+      method: "GET",
+      url: "/clear"
+    }).done(function(data) {
+        window.location = "/home"
+        // window.location.href = "/";
+    });
+  });
+  

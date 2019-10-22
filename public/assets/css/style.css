@@ -1,6 +1,6 @@
 body {
     background-image: url("/assets/images/background.jpg");
-    padding-top: 70px;
+    padding-top: 20px;
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -9,7 +9,7 @@ body {
 }
 
 .deleteNote {
-	display: inline-block;
+    display: inline-block;
 }
 
 .previousNotes {
@@ -17,21 +17,26 @@ body {
     width: 90%
 }
 
-#scrape {
-    margin: 8px 0px;
+#scrape, #clear {
+    margin: 1% 0px;
+}
+
+#home, #saved {
+    margin: 5% 0px;
 }
 
 #ftm1 {
 
     opacity: .80;
-  color: black;  
+    color: black;
 }
 
 #ftm {
 
     opacity: .65;
-    
+
 }
+
 #bgc {
 
     background: cornsilk;

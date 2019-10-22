@@ -65,15 +65,6 @@ db.once("open", function () {
   console.log("Mongoose connection successful.");
 });
 
-// Main route (simple Hello World Message)
-// app.get("/", function(req, res) {
-//   res.send("Hello world");
-// });
-
-// app.get("/", function(req, res) {
-//   res.send("home");
-// });
-
 // Routes
 // ======
 
@@ -108,7 +99,7 @@ app.get("/saved", function (req, res) {
 
 
 
-// A GET request to scrape the echojs website
+// A GET request to scrape the nytimes website
 app.get("/scrape", function (req, res) {
   // First, we grab the body of the html with request
   axios.get("https://www.nytimes.com/").then(function (response) {
@@ -140,12 +131,13 @@ app.get("/scrape", function (req, res) {
       var entry = new Article(result);
 
       var query = result.title;
+   
       Article.findOne({
         title: query
       }, function (err, Article) {
         if (err) console.log(err);
         if (Article) {
-          console.log("This has already been saved");
+          //console.log("This has already been saved");
         } else {
 
           // Now, save that entry to the db
@@ -161,7 +153,6 @@ app.get("/scrape", function (req, res) {
 
             }
           });
-
         }
       });
 
@@ -343,10 +334,20 @@ app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
   });
 });
 
+//clear Article
+app.get("/clear", function(res, req) {
+  Article.deleteMany({ saved: false }).then(function(err) {
+    if (err) {
+      console.log(err);
+     }else{
+res.send("All Cleared")
 
+    }
+  });
+
+});
 
 // Listen on PORT
 app.listen(PORT, function () {
   console.log("App running on PORT localhost:" + PORT);
 });
-
