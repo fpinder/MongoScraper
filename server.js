@@ -47,7 +47,7 @@ app.set("view engine", "handlebars");
 
 
 // Database configuration with mongoose
-// mongoose.connect("mongodb://localhost/mongoscraper");
+/* mongoose.connect("mongodb://localhost/mongoscraper"); */
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoscraper";
 
@@ -182,8 +182,8 @@ app.get("/articles", function (req, res) {
 app.get("/articles/:id", function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   Article.findOne({
-      "_id": req.params.id
-    })
+    "_id": req.params.id
+  })
     // ..and populate all of the notes associated with it
     .populate("note")
     // now, execute our query
@@ -204,10 +204,10 @@ app.get("/articles/:id", function (req, res) {
 app.post("/articles/save/:id", function (req, res) {
   // Use the article id to find and update its saved boolean
   Article.findOneAndUpdate({
-      "_id": req.params.id
-    }, {
-      "saved": true
-    })
+    "_id": req.params.id
+  }, {
+    "saved": true
+  })
     // Execute the above query
     .exec(function (err, doc) {
       // Log any errors
@@ -224,11 +224,11 @@ app.post("/articles/save/:id", function (req, res) {
 app.post("/articles/delete/:id", function (req, res) {
   // Use the article id to find and update its saved boolean
   Article.findOneAndUpdate({
-      "_id": req.params.id
-    }, {
-      "saved": false,
-      "notes": []
-    })
+    "_id": req.params.id
+  }, {
+    "saved": false,
+    "notes": []
+  })
     // Execute the above query
     .exec(function (err, doc) {
       // Log any errors
@@ -260,12 +260,12 @@ app.post("/notes/save/:id", function (req, res) {
     else {
       // Use the article id to find and update it's notes
       Article.findOneAndUpdate({
-          "_id": req.params.id
-        }, {
-          $push: {
-            "notes": note
-          }
-        })
+        "_id": req.params.id
+      }, {
+        $push: {
+          "notes": note
+        }
+      })
         // Execute the above query
         .exec(function (err) {
           // Log any errors
@@ -293,12 +293,12 @@ app.delete("/notes/delete/:note_id/:article_id", function (req, res) {
       res.send(err);
     } else {
       Article.findOneAndUpdate({
-          "_id": req.params.article_id
-        }, {
-          $pull: {
-            "notes": req.params.note_id
-          }
-        })
+        "_id": req.params.article_id
+      }, {
+        $pull: {
+          "notes": req.params.note_id
+        }
+      })
         // Execute the above query
         .exec(function (err) {
           // Log any errors
